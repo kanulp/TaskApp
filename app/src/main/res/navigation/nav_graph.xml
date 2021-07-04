@@ -3,26 +3,34 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/FirstFragment">
+    app:startDestination="@id/TaskListFragment">
 
     <fragment
-        android:id="@+id/FirstFragment"
-        android:name="com.kanulp.taskapp.FirstFragment"
-        android:label="@string/first_fragment_label"
-        tools:layout="@layout/fragment_first">
-
+        android:id="@+id/TaskListFragment"
+        android:name="com.kanulp.taskapp.ui.tasklist.TaskListFragment"
+        android:label="Task List"
+        tools:layout="@layout/fragment_task_list">
+        <argument
+            android:name="position"
+            android:defaultValue="0"
+            app:argType="integer" />
         <action
-            android:id="@+id/action_FirstFragment_to_SecondFragment"
-            app:destination="@id/SecondFragment" />
+            android:id="@+id/action_TaskListFragment_to_TaskDetailFragment"
+            app:destination="@id/TaskDetailFragment" />
     </fragment>
+
     <fragment
-        android:id="@+id/SecondFragment"
-        android:name="com.kanulp.taskapp.SecondFragment"
-        android:label="@string/second_fragment_label"
-        tools:layout="@layout/fragment_second">
-
+        android:id="@+id/TaskDetailFragment"
+        android:name="com.kanulp.taskapp.ui.taskdetail.TaskDetailFragment"
+        android:label="Task Detail"
+        tools:layout="@layout/fragment_task_detail">
         <action
-            android:id="@+id/action_SecondFragment_to_FirstFragment"
-            app:destination="@id/FirstFragment" />
+            android:id="@+id/action_TaskDetailFragment_to_TaskListFragment"
+            app:destination="@id/TaskListFragment" />
     </fragment>
+    <activity
+        android:id="@+id/mainActivity"
+        android:name="com.kanulp.taskapp.ui.MainActivity"
+        android:label="activity_main"
+        tools:layout="@layout/activity_main" />
 </navigation>
