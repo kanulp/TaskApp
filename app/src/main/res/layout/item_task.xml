@@ -24,7 +24,7 @@
 
         <TextView
             android:layout_width="match_parent"
-            android:id="@+id/tv_task_time"
+            android:id="@+id/tv_task_date"
             android:textSize="14sp"
             android:text="22 oct"
             android:textColor="#000"
@@ -32,7 +32,7 @@
 
         <TextView
             android:layout_width="match_parent"
-            android:id="@+id/tv_task_detail"
+            android:id="@+id/tv_task_desc"
             android:textSize="12sp"
             android:text="description"
             android:textColor="#000"

@@ -9,30 +9,24 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
-import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.kanulp.taskapp.R
+import com.kanulp.taskapp.util.Validator
 import com.kanulp.taskapp.viewmodel.TaskViewModel
+import kotlinx.android.synthetic.main.fragment_task_detail.*
 import java.text.SimpleDateFormat
 import java.util.*
-
 
 /**
  * A simple [Fragment] subclass as the second destination in the navigation.
  */
-//@AndroidEntryPoint
 class TaskDetailFragment : Fragment(){
 
     var viewModel : TaskViewModel? = null
 
-    var ed_task_title : EditText? = null
-    var ed_task_detail : EditText? = null
-    var ed_task_time : EditText? = null
-    var btn_action : Button? = null
-    var tv_title : TextView? = null
     var position : Int? = null
     var fromEdit : Boolean? = false
     private val myCalendar = Calendar.getInstance()
@@ -52,35 +46,14 @@ class TaskDetailFragment : Fragment(){
         viewModel = ViewModelProvider(requireActivity()).get(TaskViewModel::class.java)
     }
 
-    private fun bindView(view: View?) {
-        ed_task_title = view?.findViewById(R.id.ed_task_title)
-        ed_task_detail = view?.findViewById(R.id.ed_task_desc)
-        ed_task_time = view?.findViewById(R.id.ed_task_time)
-        btn_action = view?.findViewById(R.id.btn_action)
-        tv_title = view?.findViewById(R.id.tv_title)
-
-        ed_task_time?.setOnClickListener{
+    private fun bindView(view: View) {
+        view.findViewById<EditText>(R.id.ed_task_date)?.setOnClickListener{
             DatePickerDialog(requireContext(), datePickerListener, myCalendar
                     .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
                     myCalendar.get(Calendar.DAY_OF_MONTH)).show()
         }
-
-        btn_action?.setOnClickListener {
-
-            var title = ed_task_title?.text.toString()
-            var desc = ed_task_detail?.text.toString()
-            var time = ed_task_time?.text.toString()
-            Log.d("TASKDETAILs", "data : $title $desc $time")
-
-            if(fromEdit!!){
-                viewModel?.updateTask(position ?: 0, title, desc, time)
-                Toast.makeText(activity, "Task Updated Successfully!", Toast.LENGTH_SHORT).show()
-            }else {
-                viewModel?.addTask(title, desc, time)
-                Toast.makeText(activity, "Task Added Successfully!", Toast.LENGTH_SHORT).show()
-
-            }
-            findNavController().navigate(R.id.action_TaskDetailFragment_to_TaskListFragment)
+        view.findViewById<Button>(R.id.btn_action).setOnClickListener{
+            saveTask()
         }
     }
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -95,9 +68,8 @@ class TaskDetailFragment : Fragment(){
             fromEdit = true
             var model = viewModel?.getTask(position = position!!)
             ed_task_title?.setText(model?.task_title)
-            ed_task_detail?.setText(model?.task_detail)
-            ed_task_time?.setText(model?.task_date)
-
+            ed_task_desc?.setText(model?.task_detail)
+            ed_task_date?.setText(model?.task_date)
         }
         else{
             btn_action?.text = "Save"
@@ -108,8 +80,45 @@ class TaskDetailFragment : Fragment(){
         myCalendar.set(Calendar.YEAR, year)
         myCalendar.set(Calendar.MONTH, monthOfYear)
         myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth)
-        val myFormat = "MM/dd/yy"
+        val myFormat = "MM/dd/yyyy"
         val sdf = SimpleDateFormat(myFormat, Locale.US)
-        ed_task_time?.setText(sdf.format(myCalendar.time))
+        ed_task_date?.setText(sdf.format(myCalendar.time))
+    }
+
+    private fun saveTask(){
+
+        if(checkValidation()){
+            val title = ed_task_title?.text.toString()
+            val desc = ed_task_desc?.text.toString()
+            val time = ed_task_date?.text.toString()
+            if(fromEdit!!){
+                viewModel?.updateTask(position ?: 0, title, desc, time)
+                Toast.makeText(activity, "Task Updated Successfully!", Toast.LENGTH_SHORT).show()
+            }else {
+                viewModel?.addTask(title, desc, time)
+                Toast.makeText(activity, "Task Added Successfully!", Toast.LENGTH_SHORT).show()
+            }
+            findNavController().navigate(R.id.action_TaskDetailFragment_to_TaskListFragment)
+
+        }
+    }
+    private fun checkValidation():Boolean{
+        if(!Validator.validateEmptyInput(ed_task_title?.text.toString())) {
+            ed_task_title.error = "Please Enter Title."
+            return false
+        }
+        if(!Validator.validateEmptyInput(ed_task_desc?.text.toString())) {
+            ed_task_desc.error = "Please Enter Description."
+            return false
+        }
+        if(!Validator.validateEmptyInput(ed_task_date?.text.toString())) {
+            ed_task_date.error = "Please Enter Date."
+            return false
+        }
+        if(!Validator.validateDate(ed_task_date?.text.toString())) {
+            ed_task_date.error = "Please Enter Valid Date."
+            return false
+        }
+        return true
     }
 }

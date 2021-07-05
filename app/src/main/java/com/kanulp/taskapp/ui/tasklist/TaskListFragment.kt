@@ -65,7 +65,6 @@ class TaskListFragment : Fragment() {
                     Toast.makeText(activity, "No Data found", Toast.LENGTH_SHORT).show()
                 }
             }
-
         })
     }
 }

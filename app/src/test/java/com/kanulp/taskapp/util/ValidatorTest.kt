@@ -10,12 +10,18 @@ import org.junit.runners.JUnit4
 class ValidatorTest{
 
     @Test
-    fun whenInputIsValid(){
-        val title = "1"
-        val desc = "1"
-        val time = "1"
-        val result = Validator.validateInput(title,desc,time)
+    fun whenInputIsNull(){
+        val text = "1"
+        val result = Validator.validateEmptyInput(text)
         assertThat(result).isEqualTo(true)
     }
+
+    @Test
+    fun whenDateInputIsValid(){
+        val date = "03/04/2020"
+        val result = Validator.validateDate(date)
+        assertThat(result).isEqualTo(true)
+    }
+
 
 }

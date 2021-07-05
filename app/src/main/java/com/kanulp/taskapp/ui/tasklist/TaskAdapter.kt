@@ -34,18 +34,18 @@ class TaskAdapter(var context: Activity, var list: List<TaskModel>, var listener
             mView
     ){
         var tv_task_title: TextView? = null
-        var tv_task_time: TextView? = null
-        var tv_task_detail: TextView? = null
+        var tv_task_date: TextView? = null
+        var tv_task_desc: TextView? = null
         init {
             tv_task_title = mView.findViewById<View>(R.id.tv_task_title) as TextView
-            tv_task_time = mView.findViewById<View>(R.id.tv_task_time) as TextView
-            tv_task_detail = mView.findViewById<View>(R.id.tv_task_detail) as TextView
+            tv_task_date = mView.findViewById<View>(R.id.tv_task_date) as TextView
+            tv_task_desc = mView.findViewById<View>(R.id.tv_task_desc) as TextView
         }
 
         fun bind(model: TaskModel,position:Int,clickListener: OnItemClickListener){
             tv_task_title?.text = model.task_title
-            tv_task_time?.text = "Created On : ${model.task_date}"
-            tv_task_detail?.text = model.task_detail
+            tv_task_date?.text = "Created On : ${model.task_date}"
+            tv_task_desc?.text = model.task_detail
             itemView.setOnClickListener{
                 clickListener.onItemClick(position)
             }
